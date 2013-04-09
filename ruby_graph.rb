@@ -1,13 +1,25 @@
 # For svg:
-# ruby <this-file> && dot -Tsvg graph.vz -o "Structure.svg" && eog Structure.svg
+# ruby <this-file> && dot -Tsvg graph.dot -o "Structure.svg" && eog Structure.svg
 # For pdf:
-# ruby <this-file> && dot -Tpdf graph.vz -o "Structure.pdf" && evince Structure.pdf
+# ruby <this-file> && dot -Tpdf graph.dot -o "Structure.pdf" && evince Structure.pdf
 
 require "rails"
 
+# change constant here
 CONST = ActiveSupport
 
+# better do not look below here
+
+$recursion_guard = Set.new
 def expand(constant)
+  if $recursion_guard.include?(constant)
+    return {
+      name: constant,
+      included_modules: [],
+      submodules: []
+    }
+  end
+  $recursion_guard.add(constant)
   included_modules = constant.included_modules.select do |mod|
     mod.name && mod.name.include?(constant.name)
   end
