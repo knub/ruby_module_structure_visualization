@@ -1,9 +1,9 @@
-# ruby rails-graph.rb && circo -Tsvg graph.vz -o "Structure.svg" && eog Structure.svg
-
+# For svg:
+# ruby <this-file> && dot -Tsvg graph.vz -o "Structure.svg" && eog Structure.svg
 # For pdf:
-# ruby rails-graph.rb && dot -Tpdf graph.vz -o "ActiveSupportStructure.pdf" && e ActiveSupportStructure.pdf
+# ruby <this-file> && dot -Tpdf graph.vz -o "Structure.pdf" && evince Structure.pdf
+
 require "rails"
-require "active_record"
 
 CONST = ActiveSupport
 
@@ -59,8 +59,8 @@ def toGraphviz(file, structure, isModule = true)
   structure[:submodules].each do |mod|
     toGraphviz(file, mod, Module == mod[:name].class)
   end
-  
 end
+
 File.open("graph.vz", "w") do |f|
   f.write("digraph ActiveSupportStructure {\n")
   f.write("  graph [splines=ortho, rankdir=\"LR\", size=\"11.7,8.3!\", overlap=false]\n")
