@@ -2,7 +2,9 @@
 require "rails"
 
 def expand(constant)
-  included_modules = constant.included_modules
+  included_modules = constant.included_modules.select do |mod|
+    mod.name.include?(constant.name)
+  end
   submodules = constant.constants
     .map do
       |const|
@@ -12,7 +14,7 @@ def expand(constant)
       end
     end
     .select do |mod|
-      (mod.class == Module or mod.class == Class) and mod != BasicObject and mod.name.include?("ActiveSupport")
+      (mod.class == Module or mod.class == Class) and mod != BasicObject and mod.name.include?(constant.name)
     end
 
   if (included_modules.empty? and submodules.empty?)
