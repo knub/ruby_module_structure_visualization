@@ -35,11 +35,11 @@ end
 structure = expand(ActiveSupport)
 def toGraphviz(file, structure)
   structure[:included_modules].each do |mod|
-    file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\" [label=\"include\"]\n")
+    file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\"\n")
     toGraphviz(file, mod)
   end
   structure[:submodules].each do |mod|
-    file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\" [label=\"submodule\"]\n")
+    file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\"\n")
     toGraphviz(file, mod)
   end
   
