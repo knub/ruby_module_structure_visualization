@@ -3,10 +3,13 @@
 # For pdf:
 # ruby rails-graph.rb && dot -Tpdf graph.vz -o "ActiveSupportStructure.pdf" && e ActiveSupportStructure.pdf
 require "rails"
+require "active_record"
+
+CONST = ActiveSupport
 
 def expand(constant)
   included_modules = constant.included_modules.select do |mod|
-    mod.name.include?(constant.name)
+    mod.name && mod.name.include?(constant.name)
   end
   submodules = constant.constants
     .map do
@@ -17,7 +20,7 @@ def expand(constant)
       end
     end
     .select do |mod|
-      (mod.class == Module or mod.class == Class) and mod != BasicObject and mod.name.include?(constant.name)
+      (mod.class == Module or mod.class == Class) and mod != BasicObject and mod.name && mod.name.include?(constant.name)
     end
 
   if (included_modules.empty? and submodules.empty?)
@@ -37,19 +40,24 @@ def expand(constant)
   end
 end
 
-structure = expand(ActiveSupport)
-def toGraphviz(file, structure)
+structure = expand(CONST)
+def toGraphviz(file, structure, isModule = true)
+  if isModule
+    file.write("  \"#{structure[:name]}\" [color=deeppink]\n")
+  else
+    file.write("  \"#{structure[:name]}\" [color=green]\n")
+  end
   structure[:included_modules].each do |mod|
-    file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\"\n")
+    file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\" [color=\"#FF0000\"]\n")
   end
   structure[:submodules].each do |mod|
-    file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\"\n")
+    file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\" [color=\"#0000FF\"]\n")
   end
   structure[:included_modules].each do |mod|
     toGraphviz(file, mod)
   end
   structure[:submodules].each do |mod|
-    toGraphviz(file, mod)
+    toGraphviz(file, mod, Module == mod[:name].class)
   end
   
 end
