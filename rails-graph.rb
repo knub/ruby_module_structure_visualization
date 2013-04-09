@@ -1,4 +1,7 @@
-# ruby rails-graph.rb && circo -Tsvg graph.vz -o "ActiveSupportStructure.svg" && eog ActiveSupportStructure.svg
+# ruby rails-graph.rb && circo -Tsvg graph.vz -o "Structure.svg" && eog Structure.svg
+
+# For pdf:
+# ruby rails-graph.rb && dot -Tpdf graph.vz -o "ActiveSupportStructure.pdf" && e ActiveSupportStructure.pdf
 require "rails"
 
 def expand(constant)
@@ -38,17 +41,27 @@ structure = expand(ActiveSupport)
 def toGraphviz(file, structure)
   structure[:included_modules].each do |mod|
     file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\"\n")
-    toGraphviz(file, mod)
   end
   structure[:submodules].each do |mod|
     file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\"\n")
+  end
+  structure[:included_modules].each do |mod|
+    toGraphviz(file, mod)
+  end
+  structure[:submodules].each do |mod|
     toGraphviz(file, mod)
   end
   
 end
 File.open("graph.vz", "w") do |f|
   f.write("digraph ActiveSupportStructure {\n")
-  f.write("  graph [size=\"11.7,8.3\", ranksep=0.5, nodesep=0.1, overlap=false, start=1]\n")
+  f.write("  graph [rankdir=\"LR\", size=\"11.7,8.3!\", overlap=false]\n")
+  f.write("  graph [ratio=\"0.7094\", overlap=false]\n")
+  f.write("  node [fontname=Verdana,fontsize=20]\n")
+  f.write("  node [style=filled]")
+  f.write("  node [fillcolor=\"#EEEEEE\"]")
+  f.write("  node [color=\"#EEEEEE\"]")
+  f.write("  edge [color=\"#31CEF0\"]")
   toGraphviz(f, structure)
   f.write("}\n")
 end
