@@ -43,15 +43,15 @@ end
 structure = expand(CONST)
 def toGraphviz(file, structure, isModule = true)
   if isModule
-    file.write("  \"#{structure[:name]}\" [color=deeppink]\n")
+    file.write("  \"#{structure[:name]}\" [color=\"#DD6002\"]\n")
   else
-    file.write("  \"#{structure[:name]}\" [color=green]\n")
+    file.write("  \"#{structure[:name]}\" [color=\"#AF0333\"]\n")
   end
   structure[:included_modules].each do |mod|
-    file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\" [color=\"#FF0000\"]\n")
+    file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\" [color=\"#F7A500\"]\n")
   end
   structure[:submodules].each do |mod|
-    file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\" [color=\"#0000FF\"]\n")
+    file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\" [color=\"#F7A500\"]\n")
   end
   structure[:included_modules].each do |mod|
     toGraphviz(file, mod)
@@ -63,13 +63,12 @@ def toGraphviz(file, structure, isModule = true)
 end
 File.open("graph.vz", "w") do |f|
   f.write("digraph ActiveSupportStructure {\n")
-  f.write("  graph [rankdir=\"LR\", size=\"11.7,8.3!\", overlap=false]\n")
+  f.write("  graph [splines=ortho, rankdir=\"LR\", size=\"11.7,8.3!\", overlap=false]\n")
   f.write("  graph [ratio=\"0.7094\", overlap=false]\n")
-  f.write("  node [fontname=Verdana,fontsize=20]\n")
+  f.write("  node [penwidth=6, pad=\"4.0\", shape=polygon, fontsize=30]\n")
   f.write("  node [style=filled]")
-  f.write("  node [fillcolor=\"#EEEEEE\"]")
-  f.write("  node [color=\"#EEEEEE\"]")
-  f.write("  edge [color=\"#31CEF0\"]")
+  f.write("  node [fillcolor=\"#DDDDDD\"]")
+  f.write("  edge [penwidth=5, color=\"#F7A500\"]")
   toGraphviz(f, structure)
   f.write("}\n")
 end
