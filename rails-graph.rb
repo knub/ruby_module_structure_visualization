@@ -48,7 +48,7 @@ def toGraphviz(file, structure, isModule = true)
     file.write("  \"#{structure[:name]}\" [color=\"#AF0333\"]\n")
   end
   structure[:included_modules].each do |mod|
-    file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\" [color=\"#F7A500\"]\n")
+    file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\" [color=\"#8C5E00\"]\n")
   end
   structure[:submodules].each do |mod|
     file.write("  \"#{structure[:name]}\" -> \"#{mod[:name]}\" [color=\"#F7A500\"]\n")
