@@ -61,8 +61,8 @@ def toGraphviz(file, structure, isModule = true)
   end
 end
 
-File.open("graph.vz", "w") do |f|
-  f.write("digraph ActiveSupportStructure {\n")
+File.open("graph.dot", "w") do |f|
+  f.write("digraph Structure {\n")
   f.write("  graph [splines=ortho, rankdir=\"LR\", size=\"11.7,8.3!\", overlap=false]\n")
   f.write("  graph [ratio=\"0.7094\", overlap=false]\n")
   f.write("  node [penwidth=6, pad=\"4.0\", shape=polygon, fontsize=30]\n")
